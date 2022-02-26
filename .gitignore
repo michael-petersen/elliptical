@@ -1,0 +1,46 @@
+# Compiled files
+*.py[cod]
+*.a
+*.o
+*.so
+__pycache__
+
+# Packages/installer info
+*.egg*
+*.egg-info
+dist
+build
+eggs
+parts
+bin
+var
+sdist
+develop-eggs
+.installed.cfg
+distribute-*.tar.gz
+
+# Other
+.cache
+.tox
+.*.sw[op]
+*~
+.project
+.pydevproject
+.settings
+
+# Mac OSX
+.DS_Store
+
+notebooks/*
+coverage.xml
+
+# Other generated files
+*/version.py
+*/cython_version.py
+htmlcov
+.coverage
+MANIFEST
+.ipynb_checkpoints
+
+# Figures
+*.png
