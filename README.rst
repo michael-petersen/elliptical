@@ -12,7 +12,7 @@ Install by running `python setup.py install` in the similarity directory once un
 
 Notes
 --------
-
+For a quickstart, take a look at elliptical/tests/run_basetests.py
 
 License
 --------

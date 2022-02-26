@@ -33,7 +33,7 @@ runtag = ''
 PSPDump = Input(indir+'OUT.'+runtag+'.{0:05d}'.format(300),'star',legacy=True)
 PSPDumpt = pattern.BarTransform(PSPDump)
 
-PSPDump = transform.rotate_points(PSPDumpt,tip,tilt,0.)
+PSPDump = transform.rotate_points(PSPDumpt,0.,0.,0.)
 PSPDump.mass = PSPDumpt.mass
 
 
