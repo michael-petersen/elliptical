@@ -12,6 +12,8 @@ import elliptical
 
 from elliptical.trace import map_ellipses
 
+from elliptical.measure import measureEllipse
+
 # identify the testing files
 g1 = pkg_resources.resource_filename('elliptical','data/galaxy1.dat')
 
@@ -29,10 +31,16 @@ plt.figure()
 plt.contourf(X,Y,Z,24,cmap=cm.inferno)
 
 # map ellipses (all)
-M = map_ellipses(X,Y,Z,-6.5,-4.,numZ=16)
+M = map_ellipses(X,Y,Z,-6.5,-4.,numZ=64,verbose=1)
 
 for k in M.keys():
     plt.plot(M[k]['x'],M[k]['y'],color='black',lw=1.)
+
+
+
+ME = measureEllipse(M)
+print(ME.maxellip)
+
 
 # map ellipse (best-fit only)
 M = map_ellipses(X,Y,Z,-6.5,-4.,numZ=16,optimal=True)

@@ -58,8 +58,10 @@ class SOEllipse(object):
         up = 2*(a*f*f+c*d*d+g*b*b-2*b*d*f-a*c*g)
         down1=(b*b-a*c)*( (c-a)*np.sqrt(1+4*b*b/((a-c)*(a-c)))-(c+a))
         down2=(b*b-a*c)*( (a-c)*np.sqrt(1+4*b*b/((a-c)*(a-c)))-(c+a))
-        res1=np.sqrt(up/down1)
-        res2=np.sqrt(up/down2)
+
+        # 27 Feb: I'm putting in abs here. is this bad?
+        res1=np.sqrt(np.abs(up/down1))
+        res2=np.sqrt(np.abs(up/down2))
 
         return np.array([res1, res2])
 

@@ -102,7 +102,7 @@ def make_ellipse(xcontours,ycontours):
 
 
 
-def map_ellipses(X,Y,Z,minZ,maxZ,numZ=16,CENTERTOL=1.,PHITOL=0.3,ETOL=0.5,optimal=False):
+def map_ellipses(X,Y,Z,minZ,maxZ,numZ=16,CENTERTOL=1.,PHITOL=0.3,ETOL=0.5,optimal=False,verbose=0):
     """
     create a map of ellipses from an image
 
@@ -118,11 +118,12 @@ def map_ellipses(X,Y,Z,minZ,maxZ,numZ=16,CENTERTOL=1.,PHITOL=0.3,ETOL=0.5,optima
     PHITOL     : (float)    tolerance (radian) angle for defining ellipses (used if bar is pre-aligned)
     ETOL       : (float)    tolerance for elliptical-ness in defining best ellipse
     optimal    : (bool)     if True, return only the best-fit ellipse
+    verbose    : (int)      verbosity flag. Increase for more report.
 
     returns
     -----------
     M          : (dict)
-      if optimal, returns a one-level dictionary with x,y of the best-fit ellipse, and a (the semi-majro axis)
+      if optimal, returns a one-level dictionary with x,y of the best-fit ellipse, and a (the semi-major axis)
       if !optimal, returns a two-level dictionary with all drawn ellipses.
 
     """
@@ -165,6 +166,7 @@ def map_ellipses(X,Y,Z,minZ,maxZ,numZ=16,CENTERTOL=1.,PHITOL=0.3,ETOL=0.5,optima
                 M[cnum]['a'] = a
                 M[cnum]['e'] = 1.-b/a
                 M[cnum]['p'] = phi
+                M[cnum]['l'] = cval
 
                 # advance the ellipse counter
                 cnum += 1
@@ -187,4 +189,6 @@ def map_ellipses(X,Y,Z,minZ,maxZ,numZ=16,CENTERTOL=1.,PHITOL=0.3,ETOL=0.5,optima
     if optimal:
         return M[best_cval]
     else:
+        if (verbose>0):
+            print("You requested {} levels, found {} valid levels.".format(numZ,cnum-1))
         return M
