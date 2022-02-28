@@ -171,7 +171,8 @@ def map_ellipses(X,Y,Z,minZ,maxZ,numZ=16,CENTERTOL=1.,PHITOL=0.3,ETOL=0.5,optima
                 # advance the ellipse counter
                 cnum += 1
 
-            # identify the largest ellipse satisfying bar constraints
+            # identify the largest ellipse satisfying bar constraints:
+            #   here we are choosing the largest ellipse below some ellipticity tolerance.
             if ((a < np.nanmax(X)) &
             ((b/a)<ETOL) &
             (np.sqrt(xcenter*xcenter + ycenter*ycenter) < CENTERTOL) &

@@ -15,7 +15,7 @@ from elliptical.trace import map_ellipses
 from elliptical.measure import measureEllipse
 
 # identify the testing files
-g1 = pkg_resources.resource_filename('elliptical','data/galaxy1.dat')
+g1 = pkg_resources.resource_filename('elliptical','data/galaxy2.dat')
 
 # unpack a test image
 nmodel1 = np.genfromtxt(g1,max_rows=1)
@@ -38,15 +38,27 @@ for k in M.keys():
 
 
 
-ME = measureEllipse(M)
-print(ME.maxellip)
-
 
 # map ellipse (best-fit only)
-M = map_ellipses(X,Y,Z,-6.5,-4.,numZ=16,optimal=True)
-plt.plot(M['x'],M['y'],color='white',linestyle='dashed',lw=1.)
+MB = map_ellipses(X,Y,Z,-6.5,-4.,numZ=16,optimal=True)
+plt.plot(MB['x'],MB['y'],color='white',linestyle='dashed',lw=1.)
 
 plt.xlabel('X [scale lengths]')
 plt.ylabel('Y [scale lengths]')
 plt.tight_layout()
 plt.savefig('galaxymodel1.png')
+
+
+ME = measureEllipse(M)
+print(ME.maxellip)
+
+plt.figure()
+plt.plot(ME.sma,ME.ecc,color='black',drawstyle='steps-mid')
+plt.plot([ME.maxellip,ME.maxellip],[0.,1.],color='grey',linestyle='dashed',lw=1.)
+plt.plot([MB['a'],MB['a']],[0.,1.],color='red',linestyle='dashed',lw=1.)
+
+plt.axis([0.,np.nanmax(X),0.,1.])
+plt.xlabel('a [scale lengths]')
+plt.ylabel('ecc')
+plt.tight_layout()
+plt.savefig('galaxymodel1measure.png')

@@ -68,21 +68,23 @@ class measureEllipse(object):
         return self.sma[minbin]
 
     def _max_ellip_drop(self):
-        """location of largec eccentricity change"""
+        """location of largest eccentricity change"""
         edrop = np.ediff1d(self.ecc,to_end=0.)
         return self.sma[ np.where(np.min(edrop)==edrop)[0]]
 
     def _max_ellip(self):
         """location of maximum ellipticity
 
-        proposed in Munoz 2013
+        proposed in Munoz-Mateos+ 2013, S3.4
+        this is treated as the minimum bar length.
         """
         return self.sma[np.nanargmax(self.ecc)]
 
     def _ellip_change(self,change=0.1):
         """location where ellipticity first changes by some amount
 
-        proposed in Munoz 2013
+        proposed in Munoz-Mateos+ 2013, S3.4
+        with change=0.1 being the Munoz-Mateos+ 2013 value.
         """
         ellip_index = np.nanargmax(self.ecc)
         max_ellip_value = np.nanmax(self.ecc)
@@ -93,18 +95,24 @@ class measureEllipse(object):
         return self.sma[ellip_index-1]
 
 
-    def _pa_change(A,B,change=10.):
-        """location where the angle first differs by some amount
+    def _pa_change(self,change=10.):
+        """location where the angle differs from the position angle at the maximum ellipticity
 
-        proposed in Munoz 2013
+        proposed in Munoz-Mateos+ 2013, S3.4
+        with 10 degrees being the Munoz-Mateos+ 2013 value.
+
+        inputs
+        ------------
+        self
+        change    : the position angle change tolerance, in degrees.
+
         """
         # change must be in degrees
-        e = (1.-B/A)
-        pa = np.arctan(B/A)
-        ellip_index = np.where(np.max(e)==e)[0]
-        pa_value = pa[ellip_index]
+
+        ellip_index = np.nanargmax(self.ecc)
+        pa_value = self.phi[ellip_index]
         pa_diff = 0.
         while (pa_diff < change):
             ellip_index += 1
-            pa_diff = abs(pa[ellip_index] - pa_value)*180./np.pi
-        return A[ellip_index-1]
+            pa_diff = np.abs(self.phi[ellip_index] - pa_value)*180./np.pi
+        return self.sma[ellip_index-1]
