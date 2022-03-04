@@ -1,14 +1,23 @@
+"""ellipse
 
+underlying ellipse machinery:
+
+SOEllipse :
+  use quadratic curve ellipse properties to perform best-fit
+
+Ellipse :
+  generalise ellipse properties
+
+
+"""
 
 import numpy as np
 
 
 class SOEllipse(object):
-    '''
-    #
-    # Conic Ellipse fitter
-    #     exploiting the quadratic curve nature of the ellipse
-    #
+    '''Conic Ellipse fitter
+
+    exploiting the quadratic curve nature of the ellipse
 
     advantages: fast
 
@@ -22,19 +31,27 @@ class SOEllipse(object):
     '''
     @staticmethod
     def fitEllipse(x,y):
-        #
-        # Take a set of x,y points at fit an ellipse to it
-        #
+        """take a set of x,y points at fit an ellipse to it
+
+        """
+
+        # recast in a favourable form
         x = x[:,np.newaxis]
         y = y[:,np.newaxis]
+
+
         D =  np.hstack((x*x, x*y, y*y, x, y, np.ones_like(x)))
         S = np.dot(D.T,D)
         C = np.zeros([6,6])
         C[0,2] = C[2,0] = 2; C[1,1] = -1
+
         E, V =  np.linalg.eig(np.dot(np.linalg.inv(S), C))
+
         n = np.argmax(np.abs(E))
+
         a = V[:,n]
 
+        # return the factors to construct the ellipse
         return a
 
     @staticmethod
@@ -89,7 +106,8 @@ class Ellipse():
 
     @staticmethod
     def fixed_ellipse(th,a,b):
-        '''
+        '''fixed_ellipse
+
         returns c=2 ellipse in polar coordinates
 
 
@@ -102,11 +120,11 @@ class Ellipse():
 
     @staticmethod
     def inside_ellipse(X,Y,A,B,C,rot=0.):
-        '''
-        inside_ellipse
+        '''inside_ellipse
+
         determine whether a set of points is inside of an ellipse
 
-        # only tests in first quadrant for power safety
+        only tests in first quadrant for power safety
 
 
 

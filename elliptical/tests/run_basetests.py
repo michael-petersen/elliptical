@@ -15,7 +15,7 @@ from elliptical.trace import map_ellipses
 from elliptical.measure import measureEllipse
 
 # identify the testing files
-g1 = pkg_resources.resource_filename('elliptical','data/galaxy2.dat')
+g1 = pkg_resources.resource_filename('elliptical','data/galaxy1.dat')
 
 # unpack a test image
 nmodel1 = np.genfromtxt(g1,max_rows=1)
