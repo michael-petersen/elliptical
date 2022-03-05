@@ -97,8 +97,8 @@ def make_ellipse(xcontours,ycontours):
     a = np.max(alength)
     b = np.min(alength)
 
-    # return
-    return a,b,phi,xcenter,ycenter
+    # return: cast away any imaginary parts that mistakenly appeared
+    return a,b,np.real(phi),np.real(xcenter),np.real(ycenter)
 
 
 
