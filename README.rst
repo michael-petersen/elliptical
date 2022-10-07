@@ -8,11 +8,11 @@ A python package for computing ellipses on images (2d arrays)
 
 Install
 --------
-Install by running `python setup.py install` in the similarity directory once unpacked.
+Install by running ``python setup.py install`` in the elliptical directory once unpacked.
 
 Notes
 --------
-For a quickstart, take a look at elliptical/tests/run_basetests.py
+For a quickstart, take a look at ``elliptical/tests/run_basetests.py``.
 
 License
 --------
