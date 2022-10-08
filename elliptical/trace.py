@@ -67,7 +67,7 @@ def follow_contour(X,Y,Z,level,verbose=0):
 
 
 
-def make_ellipse(xcontours,ycontours):
+def make_ellipse_conic(xcontours,ycontours):
     """use parametric conic to get basic parameters
 
     inputs
@@ -99,6 +99,41 @@ def make_ellipse(xcontours,ycontours):
 
     # return: cast away any imaginary parts that mistakenly appeared
     return a,b,np.real(phi),np.real(xcenter),np.real(ycenter)
+
+
+def make_ellipse_parametric(xcontours,ycontours):
+    """use parametric ellipse equation to get basic parameters
+
+    inputs
+    -------------
+    xcontours     : (1d array) x values of the ellipse points
+    ycontours     : (1d array) y values of the ellipse points
+
+    returns
+    -------------
+    a             : (float) semi-major axis of ellipse
+    b             : (float) semi-minor axis of ellipse
+    phi           : (float) ellipse angle relative to y=0 axis
+    xcenter       : (float) the x centre of the ellipse
+    ycenter       : (float) the y centre of the ellipse
+    """
+
+    # do the ellipse fit
+    ell             = SOEllipse.fitEllipse(xcontours,ycontours)
+
+    # extract parameters
+    phi             = SOEllipse.ellipse_angle_of_rotation(ell)
+    xcenter,ycenter = SOEllipse.ellipse_center(ell)
+    alength         = SOEllipse.ellipse_axis_length(ell)
+
+    # set convention: a is always larger than b
+    #   this doesn't affect the angles, right?
+    a = np.max(alength)
+    b = np.min(alength)
+
+    # return: cast away any imaginary parts that mistakenly appeared
+    return a,b,np.real(phi),np.real(xcenter),np.real(ycenter)
+
 
 
 
@@ -150,7 +185,7 @@ def map_ellipses(X,Y,Z,minZ,maxZ,numZ=16,CENTERTOL=1.,PHITOL=0.3,ETOL=0.5,optima
             XCON,YCON = follow_contour(X,Y,Z,cval)
 
             # make the ellipse from the countour
-            a,b,phi,xcenter,ycenter = make_ellipse(XCON,YCON)
+            a,b,phi,xcenter,ycenter = make_ellipse_conic(XCON,YCON)
 
             # if a good ellipse, save values
             if ((np.sqrt(xcenter*xcenter + ycenter*ycenter) < CENTERTOL) &
@@ -167,6 +202,8 @@ def map_ellipses(X,Y,Z,minZ,maxZ,numZ=16,CENTERTOL=1.,PHITOL=0.3,ETOL=0.5,optima
                 M[cnum]['e'] = 1.-b/a
                 M[cnum]['p'] = phi
                 M[cnum]['l'] = cval
+                M[cnum]['xc'] = xcenter
+                M[cnum]['yc'] = ycenter
 
                 # advance the ellipse counter
                 cnum += 1
