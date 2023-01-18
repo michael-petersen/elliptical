@@ -100,13 +100,15 @@ class SOEllipse(object):
 
         phi = ellipse_angle_of_rotation( a )
 
+        # de-rotate points according to phi
+        # assumes phi is a counterclockwise rotation, so undo with clockwise
+        xell = xpts*np.cos(phi) + ypts*np.sin(phi)
+        yell =-xpts*np.sin(phi) + ypts*np.cos(phi)
+
         sma,ecc = ellipse_axis_length( a )
         smb = sma * (1-ecc)
 
-        xx = sma*np.cos(thpts)*np.cos(phi) - smb*np.sin(thpts)*np.sin(phi)
-        yy = sma*np.cos(thpts)*np.sin(phi) + smb*np.sin(thpts)*np.cos(phi)
-
-        ellipse_radius = np.sqrt(xx**2 + yy**2)/rpts
+        ellipse_radius = (xell/sma)**2 + (yell/smb)**2
 
         yes_ellipse = np.where(ellipse_radius < 1.)[0]
         ellipse_array = np.zeros(len(X))

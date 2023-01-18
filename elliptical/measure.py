@@ -34,6 +34,17 @@ class measureEllipse(object):
         self.ellipdroplimit = self._ellip_drop_below()
         self.maxellipdrop   = self._max_ellip_drop()
         self.ellipchange    = self._ellip_change()
+        self.pachange       = self._pa_change()
+
+    def print_diagnostics(self):
+        '''print all the measurements'''
+        print('{0:5.4f} | maximum ellipticity'.format(self.maxellip))
+        print('{0:5.4f} | position angle change'.format(self.pachange))
+        print('{0:5.4f} | sequential ellipticity drop method'.format(self.ellipdrop))
+        print('{0:5.4f} | ellipticity drop below threshold'.format(self.ellipdroplimit))
+        print('{0:5.4f} | maximum ellipticity drop'.format(self.maxellipdrop))
+        print('{0:5.4f} | specified ellipticity change'.format(self.ellipchange))
+
 
     def _ellip_drop(self,drop=0.4):
         '''
