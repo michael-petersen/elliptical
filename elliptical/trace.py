@@ -17,6 +17,7 @@ from skimage.measure import find_contours
 
 # the ellipse definitions
 from .ellipse import SOEllipse
+from .measure import measureEllipse
 
 
 
@@ -93,12 +94,16 @@ def make_ellipse_conic(xcontours,ycontours):
     alength         = SOEllipse.ellipse_axis_length(ell)
 
     # set convention: a is always larger than b
-    #   this doesn't affect the angles, right?
     a = np.max(alength)
     b = np.min(alength)
 
+    # if the second length is larger (e.g. natural b), need to add pi/2 and reverse the centres
+    if alength[1] > alength[0]:
+        #print('elliptical.make_ellipse_conic: misaligned bar axis')
+        phi += np.pi/2.
+
     # return: cast away any imaginary parts that mistakenly appeared
-    return a,b,np.real(phi),np.real(xcenter),np.real(ycenter)
+    return a,b,np.real(phi),np.real(ycenter),np.real(xcenter)
 
 
 def make_ellipse_parametric(xcontours,ycontours):
@@ -137,7 +142,7 @@ def make_ellipse_parametric(xcontours,ycontours):
 
 
 
-def map_ellipses(X,Y,Z,minZ,maxZ,numZ=16,CENTERTOL=1.,PHITOL=0.3,ETOL=0.5,optimal=False,verbose=0):
+def map_ellipses(X,Y,Z,minZ,maxZ,numZ=16,CENTERTOL=1.,PHITOL=7.,ETOL=0.5,optimal=False,verbose=0,method='pachange'):
     """
     create a map of ellipses from an image
 
@@ -154,6 +159,7 @@ def map_ellipses(X,Y,Z,minZ,maxZ,numZ=16,CENTERTOL=1.,PHITOL=0.3,ETOL=0.5,optima
     ETOL       : (float)    tolerance for elliptical-ness in defining best ellipse
     optimal    : (bool)     if True, return only the best-fit ellipse
     verbose    : (int)      verbosity flag. Increase for more report.
+    method: (string)   method to use for designating the best-fit ellipse
 
     returns
     -----------
@@ -177,6 +183,8 @@ def map_ellipses(X,Y,Z,minZ,maxZ,numZ=16,CENTERTOL=1.,PHITOL=0.3,ETOL=0.5,optima
     best_cval = 0.
     cnum      = 0
 
+    previousa = 1.e6
+
     # loop through contour levels
     for cval in ctestvals:
 
@@ -188,8 +196,7 @@ def map_ellipses(X,Y,Z,minZ,maxZ,numZ=16,CENTERTOL=1.,PHITOL=0.3,ETOL=0.5,optima
             a,b,phi,xcenter,ycenter = make_ellipse_conic(XCON,YCON)
 
             # if a good ellipse, save values
-            if ((np.sqrt(xcenter*xcenter + ycenter*ycenter) < CENTERTOL) &
-            (phi < PHITOL)):
+            if ((np.sqrt(xcenter*xcenter + ycenter*ycenter) < CENTERTOL) & (phi < PHITOL)):
 
                 M[cnum] = dict()
                 xx = xcenter + a*np.cos(th)*np.cos(phi) - b*np.sin(th)*np.sin(phi)
@@ -199,6 +206,7 @@ def map_ellipses(X,Y,Z,minZ,maxZ,numZ=16,CENTERTOL=1.,PHITOL=0.3,ETOL=0.5,optima
                 M[cnum]['x'] = xx
                 M[cnum]['y'] = yy
                 M[cnum]['a'] = a
+                M[cnum]['b'] = b
                 M[cnum]['e'] = 1.-b/a
                 M[cnum]['p'] = phi
                 M[cnum]['l'] = cval
@@ -208,24 +216,15 @@ def map_ellipses(X,Y,Z,minZ,maxZ,numZ=16,CENTERTOL=1.,PHITOL=0.3,ETOL=0.5,optima
                 # advance the ellipse counter
                 cnum += 1
 
-            # identify the largest ellipse satisfying bar constraints:
-            #   here we are choosing the largest ellipse below some ellipticity tolerance.
-            if ((a < np.nanmax(X)) &
-            ((b/a)<ETOL) &
-            (np.sqrt(xcenter*xcenter + ycenter*ycenter) < CENTERTOL) &
-            (phi < PHITOL)):
-
-                # check if this ellipse is larger than the current max
-                if a>maxa:
-                    maxa = a
-                    best_cval = cnum - 1
-
         # if the ellipse drawing fails, move on
         except:
             pass
 
     if optimal:
-        return M[best_cval]
+        ME = measureEllipse(M,method=method)
+
+        return ME.bestellipse
+
     else:
         if (verbose>0):
             print("You requested {} levels, found {} valid levels.".format(numZ,cnum-1))

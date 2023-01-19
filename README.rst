@@ -4,11 +4,11 @@ elliptical
 
 Purpose
 --------
-A python package for computing ellipses on images (2d arrays)
+A python package for computing ellipses on images (2d arrays), with specific measurements for barred galaxies already built in.
 
 Install
 --------
-Install by running ``python setup.py install`` in the elliptical directory once unpacked.
+Obtain the package from github. Install by running ``pip install .`` in the elliptical directory once unpacked.
 
 Notes
 --------

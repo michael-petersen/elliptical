@@ -4,6 +4,9 @@
 elliptical: a package for computing the ellipses on images.
 """
 
+__version__ = "0.2.0"
+__author__ = 'michael-petersen'
+
 # Enforce Python version check during package import.
 # This is the same check as the one at the top of setup.py
 import sys

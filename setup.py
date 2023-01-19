@@ -6,7 +6,8 @@ https://github.com/pypa/sampleproject
 """
 
 # Always prefer setuptools over distutils
-# https://setuptools.pypa.io/en/latest/setuptools.html
+# also use pip for installation
+# https://betterscientificsoftware.github.io/python-for-hpc/tutorials/python-pypi-packaging/
 from setuptools import setup, find_packages
 import pathlib
 import os
@@ -28,7 +29,7 @@ except Exception:
 """.lstrip()
 
 setup(name='elliptical',
-      version='0.1.1',
+      version = '0.2.0',
       include_package_data=True,
       package_data = { "": ["*.txt","data/*.dat"]},
       packages=['elliptical'])

@@ -111,7 +111,7 @@ class SOEllipse(object):
         ellipse_radius = (xell/sma)**2 + (yell/smb)**2
 
         yes_ellipse = np.where(ellipse_radius < 1.)[0]
-        ellipse_array = np.zeros(len(X))
+        ellipse_array = np.zeros(len(xpts))
         ellipse_array[yes_ellipse] = 1
         return ellipse_array
 
@@ -168,3 +168,32 @@ class Ellipse():
         ellipse_array = np.zeros(len(X))
         ellipse_array[yes_ellipse] = 1
         return ellipse_array
+
+
+
+
+def inside_ellipse( sma,smb,phi,xcentre,ycentre, xpts, ypts ):
+    '''inside_ellipse
+
+    determine whether a set of points is inside of an ellipse
+
+    '''
+    # transform all points to ellipse coordinate centre
+    #cellipse = ellipse_center(a)
+    xpts -= xcentre
+    ypts -= ycentre
+
+    # de-rotate points according to phi
+    # assumes phi is a counterclockwise rotation, so undo with clockwise
+    xell = xpts*np.cos(phi) + ypts*np.sin(phi)
+    yell =-xpts*np.sin(phi) + ypts*np.cos(phi)
+
+    ellipse_radius = (xell/sma)**2 + (yell/smb)**2
+
+    yes_ellipse = np.where(ellipse_radius < 1.)
+
+    ellipse_array = np.zeros_like(xpts)
+
+    ellipse_array[yes_ellipse] = 1
+
+    return ellipse_array
