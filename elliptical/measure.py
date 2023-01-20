@@ -157,13 +157,13 @@ class measureEllipse(object):
 
         """
 
-        ellip_index = np.nanargmax(self.ecc) + 1
+        ellip_index = np.nanargmax(self.ecc)
         max_ellip_value = np.nanmax(self.ecc)
 
         echange = np.ediff1d(self.ecc,to_end=0.)
 
         # can put in some tolerance to avoid little wiggles
-        while (echange[ellip_index] > 0.):
+        while (echange[ellip_index] < 0.):
             ellip_index += 1
 
         return self.sma[ellip_index-1]
