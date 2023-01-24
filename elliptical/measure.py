@@ -104,7 +104,7 @@ class measureEllipse(object):
 
             if d > drop:
                 found = True
-                print('INDEX VALUE is {0:d}'.format(j-1))
+                #print('INDEX VALUE is {0:d}'.format(j-1))
 
             j += 1
 

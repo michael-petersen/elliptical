@@ -56,7 +56,7 @@ def follow_contour(X,Y,Z,level,verbose=0):
             xcon.append(dx*res[0][i][0] + xmin)
             ycon.append(dy*res[0][i][1] + ymin)
     except:
-        if verbose > 0:
+        if verbose > 1:
             print('elliptical.trace.follow_contour: No contour found at {}'.format(level))
 
     # convert the lists to arrays
@@ -190,10 +190,13 @@ def map_ellipses(X,Y,Z,minZ,maxZ,numZ=16,CENTERTOL=1.,PHITOL=7.,ETOL=0.5,optimal
 
         try:
             # trace the contour
-            XCON,YCON = follow_contour(X,Y,Z,cval)
+            XCON,YCON = follow_contour(X,Y,Z,cval,verbose=verbose)
 
             # make the ellipse from the countour
-            a,b,phi,xcenter,ycenter = make_ellipse_conic(XCON,YCON)
+            #a,b,phi,xcenter,ycenter = make_ellipse_conic(XCON,YCON)
+
+            # contours come out in reverse order
+            a,b,phi,xcenter,ycenter = make_ellipse_conic(YCON,XCON)
 
             # if a good ellipse, save values
             if ((np.sqrt(xcenter*xcenter + ycenter*ycenter) < CENTERTOL) & (phi < PHITOL)):

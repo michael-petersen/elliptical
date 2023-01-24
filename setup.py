@@ -1,6 +1,7 @@
 """A setuptools based setup module.
 
 See:
+https://betterscientificsoftware.github.io/python-for-hpc/tutorials/python-pypi-packaging/
 https://packaging.python.org/guides/distributing-packages-using-setuptools/
 https://github.com/pypa/sampleproject
 """
