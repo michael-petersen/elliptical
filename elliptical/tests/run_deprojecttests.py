@@ -1,6 +1,9 @@
 """
 this file tests some deprojection of ellipses
 
+-Interesting things happen when the ellipse is rotated in 3d, so the deprojection is not guaranteed to be unique and recover the ellipse!
+-A good characterisation would be figuring out under what circumstances the ellipses can be recovered, (i.e. the gold sample from MaNGA)
+
 """
 import numpy as np
 import pkg_resources
@@ -12,7 +15,7 @@ import elliptical
 
 from elliptical.deproject import Deproject
 from elliptical.ellipse import SOEllipse
-from elliptical.trace import make_ellipse
+from elliptical.trace import make_ellipse_conic
 
 D = Deproject(2.,1.,0.,np.pi/4.)
 print(D.sma,D.smb,D.ecc)
@@ -54,15 +57,17 @@ plt.figure()
 
 plt.plot(xx,yy,color='black')
 
-yrot = 50.
-zrot = 50.
+yrot = 40.
+zrot = 0.
 
-for indx in np.linspace(10.,85.,10):
+for indx in np.linspace(5.,85.,10):
 
     # the last rotation has no bearing on the deprojection (or the measured ellipse)
     # the y rotation will need some work, though.
     xp,yp = rotate_xy(xx,yy,construct_tait_bryan(indx,yrot,zrot))
-    EE = make_ellipse(xp,yp)
+    EE = make_ellipse_conic(xp,yp)
+
+    # EE is [a,b,phi,xcenter,ycenter]
 
 
     D = Deproject(EE[0],EE[1],yrot*np.pi/180.,indx*np.pi/180.)

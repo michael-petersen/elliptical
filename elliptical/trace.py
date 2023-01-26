@@ -39,11 +39,14 @@ def follow_contour(X,Y,Z,level,verbose=0):
     """
 
     # make index boundaries
-    dx = np.unique(X[0,:])[1] - np.unique(X[0,:])[0]
-    xmin = np.min(np.unique(X[0,:]))
+    uxvals = np.unique(X) # np.unique(X[0,:])
+    uxvals = uxvals[np.argsort(uxvals)]
+    dx = uxvals[1] - uxvals[0]
+    xmin = np.min(uxvals)
 
-    dy = np.unique(Y[:,0])[1] - np.unique(Y[:,0])[0]
-    ymin = np.min(np.unique(Y[:,0]))
+    uyvals = np.unique(Y) # np.unique(Y[:,0])
+    dy = uyvals[1] - uyvals[0]
+    ymin = np.min(uyvals)
 
     # trace the contour
     res = find_contours(Z,level)
